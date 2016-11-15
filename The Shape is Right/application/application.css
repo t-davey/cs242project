@@ -1,0 +1,25 @@
+.graytheme {
+	-fx-background-color: #333333; 
+	-fx-background-radius: 5; 
+	-fx-alignment: center; 
+}
+
+.gridtheme {
+	-fx-background-color: #777777;
+	-fx-background-radius: 5;
+	-fx-alignment: center;	
+	-fx-text-fill: #FFFFFF;
+}
+
+.buttontheme {
+	-fx-background-color: #555555;
+	-fx-font-family: "Arial";
+	-fx-text-fill: #FFFFFF;
+}
+
+/* Testing themes. Should be removed before final version is submitted. */
+.bluetheme {
+	-fx-background-color: BLUE; 
+	-fx-background-radius: 5; 
+	-fx-alignment: center; 
+}

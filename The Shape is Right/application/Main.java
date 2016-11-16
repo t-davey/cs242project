@@ -1,10 +1,13 @@
 package application;
 	
 import java.util.ArrayList;
-
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Random;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -19,6 +22,9 @@ import javafx.scene.control.SelectionMode;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
+import javafx.scene.shape.Circle;
+import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.Shape;
 
 
 public class Main extends Application {
@@ -26,6 +32,11 @@ public class Main extends Application {
 	public int N;
 	public int minN = 3;
 	public int maxN = 7;
+	public int score;
+	public ObservableList<String> shapeInput;
+	public ObservableList<String> colorInput;
+	public Random shapeRand;
+	public Random colorRand;
 	
 	@Override
 	public void start(Stage primaryStage) {
@@ -42,7 +53,7 @@ public class Main extends Application {
 			 * Primary control pane where all user interaction will take place
 			 */
 			GridPane controlBox = new GridPane();
-			//controlBox.setGridLinesVisible( true ); //disable grid lines before final version
+			controlBox.setGridLinesVisible( true ); //visible grid lines before final version
 			controlBox.getStyleClass().add("gridtheme");
 			controlBox.setMinSize(600.0, 300.0);
 			controlBox.setMaxSize(600.0, 300.0);
@@ -57,10 +68,25 @@ public class Main extends Application {
 			
 			
 			
-			//quitButton
-			Button quitButton = new Button();
-			quitButton.setText( "Quit" );
-			quitButton.getStyleClass().add("buttontheme");
+			//closeButton
+			Button closeButton = new Button();
+			closeButton.setText( "Close" );
+			closeButton.getStyleClass().add("buttontheme");
+			
+			
+			Button submitButton = new Button();
+			submitButton.setText( "Submit" );
+			submitButton.getStyleClass().add("buttontheme");
+			
+			ArrayList<ComboBox> guessInputFields = new ArrayList<ComboBox>();
+			ArrayList<Shape> shapeDisplay = new ArrayList<Shape>();
+			
+			Map shapes = new HashMap();
+			shapes.put( "Circle", new Circle() );
+			shapes.put( "Rectangle", new Rectangle() );
+			shapes.put( "Circle", new Circle() );
+			shapes.put( "Circle", new Circle() );
+			
 			
 			/*
 			 * Creation of selectN ComboBox populated with odd values from
@@ -87,6 +113,7 @@ public class Main extends Application {
 			shapeList.setItems( shapeArrayList );
 			shapeList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 			
+			
 			/*
 			 * Creation of colorList ListView populated with Strings representing
 			 * possible colors. Final decision on how to implement colors is yet to
@@ -100,21 +127,24 @@ public class Main extends Application {
 			
 			
 			//Add controls to controlBox
-			controlBox.getChildren().add( quitButton );
+			controlBox.getChildren().add( closeButton );
+			controlBox.getChildren().add( submitButton );
 			controlBox.getChildren().add( selectN );
 			controlBox.getChildren().add( shapeList );
 			controlBox.getChildren().add( colorList );
 			
 			
 			//Assigning nodes to grid positions
-			GridPane.setConstraints( quitButton, 1, 3 );
+			GridPane.setConstraints( closeButton, 1, 3 );
+			GridPane.setConstraints( submitButton, 1, 2 );
 			GridPane.setConstraints( selectN, 1, 0 );
 			GridPane.setConstraints( shapeList, 0, 1 , 1, 2);
 			GridPane.setConstraints( colorList, 2, 1 , 1, 2);
 			
 			
 			//setHalignment and setValignments for controls in the buttonBox GridPane
-			GridPane.setHalignment( quitButton, HPos.CENTER );
+			GridPane.setHalignment( closeButton, HPos.CENTER );
+			GridPane.setHalignment( submitButton, HPos.CENTER );
 			GridPane.setHalignment( selectN, HPos.CENTER );
 			GridPane.setValignment( shapeList, VPos.CENTER );
 			GridPane.setValignment( colorList, VPos.CENTER );
@@ -127,7 +157,55 @@ public class Main extends Application {
 			scene.getStylesheets().add( getClass().getResource("application.css").toExternalForm() );
 			
 			
-			quitButton.setOnAction( new EventHandler<ActionEvent>() {
+			shapeList.getSelectionModel().getSelectedItems().addListener(
+					new ListChangeListener<String>() {
+						public void onChanged
+						( ListChangeListener.Change<? extends String> c){
+							shapeInput = shapeList.getSelectionModel().getSelectedItems() ;
+						}	
+					});
+			
+			
+			colorList.getSelectionModel().getSelectedItems().addListener(
+					new ListChangeListener<String>() {
+						public void onChanged
+						( ListChangeListener.Change<? extends String> c){
+							colorInput = colorList.getSelectionModel().getSelectedItems() ;
+						}	
+					});
+			
+			
+			submitButton.setOnAction( new EventHandler<ActionEvent>() {
+
+				@Override
+				public void handle(ActionEvent arg0) {
+					shapeList.setVisible( false );
+					colorList.setVisible( false );				
+					selectN.setVisible( false );				
+					submitButton.setVisible( false );		
+					
+					shapeRand = new Random( shapeInput.size() );
+					colorRand = new Random( colorInput.size() );
+					
+					for ( int i = 0; i < N; i++ ) {
+						guessInputFields.add( new ComboBox<String>() );
+					}
+														
+				}
+				
+			});
+
+
+			selectN.setOnAction( new EventHandler<ActionEvent>() {
+
+				@Override
+				public void handle(ActionEvent event) {
+					N = selectN.getValue();
+				}
+				
+			});
+			
+			closeButton.setOnAction( new EventHandler<ActionEvent>() {
 				
 				@Override
 				public void handle( ActionEvent event ) {

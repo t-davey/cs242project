@@ -13,6 +13,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.HPos;
 import javafx.geometry.VPos;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -186,6 +187,15 @@ public class Main extends Application {
 					
 					shapeRand = new Random( shapeInput.size() );
 					colorRand = new Random( colorInput.size() );
+
+                    for(int i = 0; i < N; i++) {
+                        // get a random shape, add it to array
+                        shapeDisplay.add(buildCardObject(shapeInput.get(shapeRand.nextInt())));
+                        // fill that shape with random color
+                        shapeDisplay.get(i).setFill(buildColorEnum(colorInput.get(colorRand.nextInt())));
+                        // set a white stroke to make it more visible
+                        shapeDisplay.get(i).setStroke(Color.WHITE);
+                    }
 					
 					for ( int i = 0; i < N; i++ ) {
 						guessInputFields.add( new ComboBox<String>() );
@@ -251,6 +261,21 @@ public class Main extends Application {
             return temp.getHexagon();
         }
         return null; // you should never hit this
+    }
+
+    public static Color buildColorEnum(String selection) {
+        String selectedColor = selection.toLowerCase();
+
+        if(selectedColor == "red") {
+            return Color.RED;
+        } else if(selectedColor == "green") {
+            return Color.GREEN;
+        } else if(selectedColor == "blue") {
+            return Color.BLUE;
+        } else if(selectedColor == "yellow") {
+            return Color.YELLOW;
+        }
+        return null; //you should never hit this
     }
 	
 	public static void main(String[] args) {

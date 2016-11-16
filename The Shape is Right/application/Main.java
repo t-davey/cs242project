@@ -235,6 +235,23 @@ public class Main extends Application {
 			
 		}
 	}
+
+    public static Shape buildCardObject(String selection) {
+        String selectedShape = selection.toLowerCase();
+
+        if(selectedShape == "rectangle") {
+            return new Rectangle();
+        } else if(selectedShape == "circle") {
+            return new Circle();
+        } else if(selectedShape == "triangle") {
+            Triangle temp = new Triangle();
+            return temp.getTriangle();
+        } else if(selectedShape == "hexagon") {
+            Hexagon temp = new Hexagon();
+            return temp.getHexagon();
+        }
+        return null; // you should never hit this
+    }
 	
 	public static void main(String[] args) {
 		

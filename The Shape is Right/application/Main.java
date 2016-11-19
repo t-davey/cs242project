@@ -56,9 +56,9 @@ public class Main extends Application {
 			GridPane controlBox = new GridPane();
 			controlBox.setGridLinesVisible( true ); //visible grid lines before final version
 			controlBox.getStyleClass().add("gridtheme");
-			controlBox.setMinSize(600.0, 300.0);
-			controlBox.setMaxSize(600.0, 300.0);
-			controlBox.setPrefSize(600.0, 300.0);
+			controlBox.setMinSize(1200.0, 300.0);
+			controlBox.setMaxSize(1200.0, 300.0);
+			controlBox.setPrefSize(1200.0, 300.0);
 			controlBox.getRowConstraints().add( new RowConstraints(70) );
 			controlBox.getRowConstraints().add( new RowConstraints(70) );
 			controlBox.getRowConstraints().add( new RowConstraints(70) );
@@ -66,10 +66,12 @@ public class Main extends Application {
 			controlBox.getColumnConstraints().add( new ColumnConstraints(150) );
 			controlBox.getColumnConstraints().add( new ColumnConstraints(150) );
 			controlBox.getColumnConstraints().add( new ColumnConstraints(150) );
-			
-			
-			
-			//closeButton
+
+
+
+
+
+            //closeButton
 			Button closeButton = new Button();
 			closeButton.setText( "Close" );
 			closeButton.getStyleClass().add("buttontheme");
@@ -162,7 +164,7 @@ public class Main extends Application {
 			root.add( controlBox, 0, 1 );
 			
 			
-			Scene scene = new Scene( root, 600, 600 );
+			Scene scene = new Scene( root, 1200, 600 );
 			scene.getStylesheets().add( getClass().getResource("application.css").toExternalForm() );
 			
 			
@@ -191,7 +193,8 @@ public class Main extends Application {
 
 				@Override
 				public void handle(ActionEvent arg0) {
-					
+                    ArrayList<String> combinationDisplay = new ArrayList<String>();
+                    ObservableList<String> combinationComboBoxDisplay;
 					System.err.println( "Disabling default controls.");
 					
 					shapeList.setVisible( false );
@@ -208,26 +211,31 @@ public class Main extends Application {
                     for(int i = 0; i < N; i++) {
                     	System.err.println( "Building shapes." );
                         // get a random shape, add it to array
-                    	
-                        shapeDisplay.add(buildCardObject(shapeInput.get(shapeRand.nextInt(shapeInput.size()))));
+                    	String shape = shapeInput.get(shapeRand.nextInt(shapeInput.size()));
+                        shapeDisplay.add(buildCardObject(shape));
                         // fill that shape with random color
-                        shapeDisplay.get(i).setFill(buildColorEnum(colorInput.get(colorRand.nextInt(colorInput.size()))));
+                        String color = colorInput.get(colorRand.nextInt(colorInput.size()));
+                        shapeDisplay.get(i).setFill(buildColorEnum(color));
                         // set a white stroke to make it more visible
                         shapeDisplay.get(i).setStroke(Color.WHITE);
+                        // add the combination to a list of all combinations
+                        System.err.println(color + " " + shape);
+                        combinationDisplay.add(color + " " + shape);
                     }
 					
                     System.err.println( "Creating guess fields." );
-                    
-					for ( int i = 0; i < N; i++ ) {
-						guessInputFields.add( new ComboBox<String>() );
-					}
-					
-					System.err.println( guessInputFields );
-					
-					for ( int i = 0; i < guessInputFields.size(); i++ ){
-						guessInputFields.get( i ).setVisible( true );
-					}
-														
+
+                    for(int i = 0; i < N-3; i++) {
+                        controlBox.getColumnConstraints().add( new ColumnConstraints(150) );
+                    }
+                    combinationComboBoxDisplay = FXCollections.observableArrayList(combinationDisplay);
+                    System.err.println(combinationComboBoxDisplay);
+                    for ( int i = 0; i < N; i++ ) {
+                        guessInputFields.add( new ComboBox<String>(combinationComboBoxDisplay) );
+                        GridPane.setConstraints(guessInputFields.get(i), i, 1 );
+                        controlBox.getChildren().add( guessInputFields.get(i) );
+                        guessInputFields.get(i).setVisible(true);
+                    }
 				}
 				
 			});

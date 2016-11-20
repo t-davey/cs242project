@@ -3,6 +3,8 @@ package application;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
+
+import javafx.animation.FadeTransition;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -13,6 +15,8 @@ import javafx.event.EventHandler;
 import javafx.geometry.HPos;
 import javafx.geometry.VPos;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -25,6 +29,7 @@ import javafx.scene.layout.RowConstraints;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
+import javafx.util.Duration;
 
 
 public class Main extends Application {
@@ -75,6 +80,11 @@ public class Main extends Application {
 			Button submitButton = new Button();
 			submitButton.setText( "Submit" );
 			submitButton.getStyleClass().add("buttontheme");
+
+            //guessButton
+            Button guessButton = new Button();
+            guessButton.setText("Guess!");
+            guessButton.getStyleClass().add("buttontheme");
 			
 			ArrayList<ComboBox> guessInputFields = new ArrayList<ComboBox>();
 			ArrayList<Shape> shapeDisplay = new ArrayList<Shape>();
@@ -129,13 +139,18 @@ public class Main extends Application {
 			GridPane.setConstraints( shapeList, 0, 1 , 1, 2);
 			GridPane.setConstraints( colorList, 2, 1 , 1, 2);
 			
-						
+			for ( int i = 0; i < guessInputFields.size(); i++ ){
+				controlBox.getChildren().add( guessInputFields.get( i ) );
+				GridPane.setConstraints( guessInputFields.get( i ), i, 0);
+				guessInputFields.get( i ).setVisible( false );
+			}
+			
 			//setHalignment and setValignments for controls in the buttonBox GridPane
 			GridPane.setHalignment( closeButton, HPos.CENTER );
 			GridPane.setHalignment( submitButton, HPos.CENTER );
-			GridPane.setHalignment( selectN, HPos.CENTER );
+			GridPane.setHalignment(selectN, HPos.CENTER);
 			GridPane.setValignment( shapeList, VPos.CENTER );
-			GridPane.setValignment( colorList, VPos.CENTER );
+			GridPane.setValignment(colorList, VPos.CENTER);
 			
 			root.add( controlBox, 0, 1 );
 
@@ -143,7 +158,7 @@ public class Main extends Application {
                 GridPane to show shapes after hitting the submitButton and guessing.
             */
             GridPane displayBox = new GridPane();
-            displayBox.setGridLinesVisible( true ); //visible grid lines before final version
+            displayBox.setGridLinesVisible(true); //visible grid lines before final version
             displayBox.getStyleClass().add("gridtheme");
             displayBox.setMinSize(1200.0, 275.0);
             displayBox.setMaxSize(1200.0, 275.0);
@@ -151,14 +166,25 @@ public class Main extends Application {
             displayBox.getRowConstraints().add( new RowConstraints(275) );
             displayBox.getColumnConstraints().add( new ColumnConstraints(150) );
             displayBox.getColumnConstraints().add( new ColumnConstraints(150) );
-            displayBox.getColumnConstraints().add( new ColumnConstraints(150) );
+            displayBox.getColumnConstraints().add(new ColumnConstraints(150));
+
+            primaryStage.setTitle("The Shape is Right!");
 
             root.add( displayBox, 0, 0 );
 
+            ArrayList<Text> shapeMasks = new ArrayList<Text>();
+            // Set up masks for shapes '?'
+            for(int i = 0; i < 7; i++) {
+                Text temp = new Text("?");
+                temp.setFont(new Font(100));
+                GridPane.setConstraints(temp, i, 0);
+                GridPane.setHalignment(temp, HPos.CENTER);
+                shapeMasks.add(temp);
+            }
+
             // Set up the scene, style it
             Scene scene = new Scene( root, 1200, 570 );
-			scene.getStylesheets().add( getClass().getResource("application.css").toExternalForm() );
-			primaryStage.setTitle("The Shape is Right!");
+			scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 			
 			//EventHandler for shapeList ListView to get shape choices from user.
 			shapeList.getSelectionModel().getSelectedItems().addListener(
@@ -189,7 +215,6 @@ public class Main extends Application {
 					colorList.setVisible( false );
 					selectN.setVisible( false );
 					submitButton.setVisible( false );
-                    closeButton.setVisible(false);
 
 					shapeRand = new Random();
 					colorRand = new Random();
@@ -209,10 +234,13 @@ public class Main extends Application {
                         // set a white stroke to make it more visible
                         shapeDisplay.get(i).setStroke(Color.WHITE);
                         GridPane.setConstraints(shapeDisplay.get(i), i, 0);
-                        displayBox.getChildren().add(shapeDisplay.get(i));
+                        displayBox.getChildren().add(shapeMasks.get(i));
+                        //displayBox.getChildren().add(shapeDisplay.get(i));
                         // add the combination to a list of all combinations
                         combinationDisplay.add(color + " " + shape);
                     }
+
+                    GridPane.setConstraints(closeButton, 3, 3);
 
                     // initialize list of options
                     Collections.shuffle(combinationDisplay, new Random());
@@ -222,7 +250,7 @@ public class Main extends Application {
                     for(int i = 0; i < N; i++) {
                         guessInputFields.add( new ComboBox<String>(combinationComboBoxDisplay) );
                         GridPane.setConstraints(guessInputFields.get(i), i, 1 );
-                        GridPane.setHalignment( guessInputFields.get(i), HPos.CENTER );
+                        GridPane.setHalignment(guessInputFields.get(i), HPos.CENTER);
                         controlBox.getChildren().add( guessInputFields.get(i) );
                         guessInputFields.get(i).setVisible(true);
                     }
@@ -236,6 +264,31 @@ public class Main extends Application {
 					N = selectN.getValue();
 				}
 			});
+
+            //EventHandler for guessButton Button to process user input for guesses.
+            guessButton.setOnAction( new EventHandler<ActionEvent>() {
+                @Override
+                public void handle( ActionEvent event ) {
+                    try {
+                        FadeTransition fadeOut = new FadeTransition();
+                        fadeOut.setDuration(new Duration(2000));
+                        fadeOut.setNode(null); // Change this
+                        fadeOut.setFromValue(1.0);
+                        fadeOut.setToValue(0.0);
+
+                        FadeTransition fadeIn = new FadeTransition();
+                        fadeIn.setDuration(new Duration(2000));
+                        fadeIn.setNode(null); //change this
+                        fadeIn.setFromValue(1.0);
+                        fadeIn.setToValue(0.0);
+
+                        fadeOut.play();
+                        fadeIn.play();
+                    } catch ( Exception e ) {
+                        e.printStackTrace(System.err);
+                    }
+                }
+            });
 			
 			//EventHandler for closeButton Button to gracefully exit program.
 			closeButton.setOnAction( new EventHandler<ActionEvent>() {

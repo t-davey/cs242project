@@ -1,8 +1,7 @@
 package application;
 	
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Collections;
 import java.util.Random;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -33,6 +32,8 @@ public class Main extends Application {
 	public int N;
 	public int minN = 3;
 	public int maxN = 7;
+    public static final int MAX_TRIALS = 3;
+    public int trial = 0;
 	public int score;
 	public ObservableList<String> shapeInput;
 	public ObservableList<String> colorInput;
@@ -42,23 +43,21 @@ public class Main extends Application {
 	@Override
 	public void start(Stage primaryStage) {
 		try {
-			
 			GridPane root = new GridPane();
 			root.setGridLinesVisible( true );
 			root.getStyleClass().add("graytheme");
 			root.getRowConstraints().add( new RowConstraints(300) ); //split main GridPane in half
 			root.getRowConstraints().add( new RowConstraints(300) );
-			
-						
+
 			/*
 			 * Primary control pane where all user interaction will take place
 			 */
 			GridPane controlBox = new GridPane();
 			controlBox.setGridLinesVisible( true ); //visible grid lines before final version
 			controlBox.getStyleClass().add("gridtheme");
-			controlBox.setMinSize(1200.0, 300.0);
-			controlBox.setMaxSize(1200.0, 300.0);
-			controlBox.setPrefSize(1200.0, 300.0);
+			controlBox.setMinSize(1200.0, 275.0);
+			controlBox.setMaxSize(1200.0, 275.0);
+			controlBox.setPrefSize(1200.0, 275.0);
 			controlBox.getRowConstraints().add( new RowConstraints(70) );
 			controlBox.getRowConstraints().add( new RowConstraints(70) );
 			controlBox.getRowConstraints().add( new RowConstraints(70) );
@@ -66,31 +65,19 @@ public class Main extends Application {
 			controlBox.getColumnConstraints().add( new ColumnConstraints(150) );
 			controlBox.getColumnConstraints().add( new ColumnConstraints(150) );
 			controlBox.getColumnConstraints().add( new ColumnConstraints(150) );
-
-
-
-
 
             //closeButton
 			Button closeButton = new Button();
 			closeButton.setText( "Close" );
 			closeButton.getStyleClass().add("buttontheme");
 			
-			
+			//submitButton
 			Button submitButton = new Button();
 			submitButton.setText( "Submit" );
 			submitButton.getStyleClass().add("buttontheme");
 			
 			ArrayList<ComboBox> guessInputFields = new ArrayList<ComboBox>();
 			ArrayList<Shape> shapeDisplay = new ArrayList<Shape>();
-			
-			
-			Map<String, Shape> shapes = new HashMap<String, Shape>();
-			shapes.put( "Circle", new Circle() );
-			shapes.put( "Rectangle", new Rectangle() );
-			shapes.put( "Circle", new Circle() );
-			shapes.put( "Circle", new Circle() );
-			
 			
 			/*
 			 * Creation of selectN ComboBox populated with odd values from
@@ -104,8 +91,7 @@ public class Main extends Application {
 			ComboBox<Integer> selectN = new ComboBox<Integer>();
 			selectN.setItems( choiceObservList );
 			selectN.setPromptText( "Number of Shapes:" );
-			
-			
+
 			/*
 			 * Creation of shapeList ListView populated with Strings representing
 			 * possible shapes. Final decision on how to implement shapes is yet to
@@ -116,7 +102,6 @@ public class Main extends Application {
 			ListView<String> shapeList = new ListView<String>();
 			shapeList.setItems( shapeArrayList );
 			shapeList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-			
 			
 			/*
 			 * Creation of colorList ListView populated with Strings representing
@@ -129,7 +114,6 @@ public class Main extends Application {
 			colorList.setItems( colorArrayList );
 			colorList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 			
-			
 			//Add controls to controlBox
 			controlBox.getChildren().add( closeButton );
 			controlBox.getChildren().add( submitButton );
@@ -137,7 +121,6 @@ public class Main extends Application {
 			controlBox.getChildren().add( shapeList );
 			controlBox.getChildren().add( colorList );
 			//controlBox.getChildren().addAll( guessInputFields );
-			
 			
 			//Assigning nodes to grid positions
 			GridPane.setConstraints( closeButton, 1, 3 );
@@ -152,7 +135,6 @@ public class Main extends Application {
 				guessInputFields.get( i ).setVisible( false );
 			}
 			
-			
 			//setHalignment and setValignments for controls in the buttonBox GridPane
 			GridPane.setHalignment( closeButton, HPos.CENTER );
 			GridPane.setHalignment( submitButton, HPos.CENTER );
@@ -160,13 +142,27 @@ public class Main extends Application {
 			GridPane.setValignment( shapeList, VPos.CENTER );
 			GridPane.setValignment( colorList, VPos.CENTER );
 			
-			
 			root.add( controlBox, 0, 1 );
-			
-			
-			Scene scene = new Scene( root, 1200, 600 );
+
+            /*
+                GridPane to show shapes after hitting the submitButton and guessing.
+            */
+            GridPane displayBox = new GridPane();
+            displayBox.setGridLinesVisible( true ); //visible grid lines before final version
+            displayBox.getStyleClass().add("gridtheme");
+            displayBox.setMinSize(1200.0, 275.0);
+            displayBox.setMaxSize(1200.0, 275.0);
+            displayBox.setPrefSize(1200.0, 275.0);
+            displayBox.getRowConstraints().add( new RowConstraints(275) );
+            displayBox.getColumnConstraints().add( new ColumnConstraints(150) );
+            displayBox.getColumnConstraints().add( new ColumnConstraints(150) );
+            displayBox.getColumnConstraints().add( new ColumnConstraints(150) );
+
+            root.add( displayBox, 0, 0 );
+
+            // Set up the scene, style it
+            Scene scene = new Scene( root, 1200, 570 );
 			scene.getStylesheets().add( getClass().getResource("application.css").toExternalForm() );
-			
 			
 			//EventHandler for shapeList ListView to get shape choices from user.
 			shapeList.getSelectionModel().getSelectedItems().addListener(
@@ -176,8 +172,7 @@ public class Main extends Application {
 							shapeInput = shapeList.getSelectionModel().getSelectedItems() ;
 						}	
 					});
-			
-			
+
 			//EventHandler for colorList ListView to get color choices from user.
 			colorList.getSelectionModel().getSelectedItems().addListener(
 					new ListChangeListener<String>() {
@@ -186,143 +181,124 @@ public class Main extends Application {
 							colorInput = colorList.getSelectionModel().getSelectedItems() ;
 						}	
 					});
-			
-			
+
 			//EventHandler for submitButton Button to gather game setup info from user.
 			submitButton.setOnAction( new EventHandler<ActionEvent>() {
-
 				@Override
 				public void handle(ActionEvent arg0) {
                     ArrayList<String> combinationDisplay = new ArrayList<String>();
                     ObservableList<String> combinationComboBoxDisplay;
-					System.err.println( "Disabling default controls.");
-					
-					shapeList.setVisible( false );
-					colorList.setVisible( false );				
-					selectN.setVisible( false );				
-					submitButton.setVisible( false );		
-					
-					System.err.println( "Generating random shapes and colors." );
-					
-					shapeRand = new Random( shapeInput.size() );
-					colorRand = new Random( colorInput.size() );
 
-					
+					shapeList.setVisible( false );
+					colorList.setVisible( false );
+					selectN.setVisible( false );
+					submitButton.setVisible( false );
+                    closeButton.setVisible(false);
+
+					shapeRand = new Random();
+					colorRand = new Random();
+
+                    for(int i = 0; i < N - 3; i++) {
+                        controlBox.getColumnConstraints().add( new ColumnConstraints(150) );
+                        displayBox.getColumnConstraints().add( new ColumnConstraints(150) );
+                    }
+
                     for(int i = 0; i < N; i++) {
-                    	System.err.println( "Building shapes." );
                         // get a random shape, add it to array
                     	String shape = shapeInput.get(shapeRand.nextInt(shapeInput.size()));
-                        shapeDisplay.add(buildCardObject(shape));
+                        shapeDisplay.add(buildCardObject(shape, i));
                         // fill that shape with random color
                         String color = colorInput.get(colorRand.nextInt(colorInput.size()));
                         shapeDisplay.get(i).setFill(buildColorEnum(color));
                         // set a white stroke to make it more visible
                         shapeDisplay.get(i).setStroke(Color.WHITE);
+                        GridPane.setConstraints(shapeDisplay.get(i), i, 0);
+                        displayBox.getChildren().add(shapeDisplay.get(i));
                         // add the combination to a list of all combinations
-                        System.err.println(color + " " + shape);
                         combinationDisplay.add(color + " " + shape);
                     }
-					
-                    System.err.println( "Creating guess fields." );
 
-                    for(int i = 0; i < N-3; i++) {
-                        controlBox.getColumnConstraints().add( new ColumnConstraints(150) );
-                    }
+                    // initialize list of options
+                    Collections.shuffle(combinationDisplay, new Random());
                     combinationComboBoxDisplay = FXCollections.observableArrayList(combinationDisplay);
-                    System.err.println(combinationComboBoxDisplay);
-                    for ( int i = 0; i < N; i++ ) {
+
+                    // add dropdowns to gui
+                    for(int i = 0; i < N; i++) {
                         guessInputFields.add( new ComboBox<String>(combinationComboBoxDisplay) );
                         GridPane.setConstraints(guessInputFields.get(i), i, 1 );
                         controlBox.getChildren().add( guessInputFields.get(i) );
                         guessInputFields.get(i).setVisible(true);
+                        GridPane.setValignment( guessInputFields.get(i), VPos.CENTER );
                     }
 				}
-				
 			});
-
 
 			//EventHandler for selectN ComboBox to get N value from user.
 			selectN.setOnAction( new EventHandler<ActionEvent>() {
-
 				@Override
 				public void handle(ActionEvent event) {
 					N = selectN.getValue();
 				}
-				
 			});
 			
 			//EventHandler for closeButton Button to gracefully exit program.
 			closeButton.setOnAction( new EventHandler<ActionEvent>() {
-				
 				@Override
 				public void handle( ActionEvent event ) {
-					
 					try {
-						
-						primaryStage.close(); 						
+						primaryStage.close();
 						Platform.exit(); 		
-						
 					} catch ( Exception e ) {
-						
 						e.printStackTrace(System.err);
-						
 					}
 				}
 			});
-			
-			
+
 			primaryStage.setScene( scene );
 			primaryStage.setResizable( false );
 			primaryStage.show();
-			
-			
 		} catch(Exception e) {
-			
 			e.printStackTrace();
-			
 		}
 	}
 
-    public static Shape buildCardObject(String selection) {
+    public static Shape buildCardObject(String selection, int index) {
         String selectedShape = selection.toLowerCase();
-        System.err.println( selectedShape );
-        if(selectedShape.equals("rectangle")) {
-        	System.out.println( "rectangle" );
-            return new Rectangle();
-        } else if(selectedShape.equals("circle")) {
-        	System.out.println( "circle" );
-            return new Circle();
-        } else if(selectedShape.equals("triangle")) {
-        	System.out.println( "triangle" );
-            Triangle temp = new Triangle();
-            return temp.getTriangle();
-        } else if(selectedShape.equals("hexagon")) {
-        	System.out.println( "hexagon" );
-            Hexagon temp = new Hexagon();
-            return temp.getHexagon();
+
+        switch (selectedShape) {
+            case "rectangle":
+                return new Rectangle(150, 30);
+            case "circle":
+                return new Circle(75);
+            case "triangle": {
+                Triangle temp = new Triangle(75, 100, 75 - index * 75, 60);
+                return temp.getTriangle();
+            }
+            case "hexagon": {
+                Hexagon temp = new Hexagon(150, 100, index * 150, 50);
+                return temp.getHexagon();
+            }
         }
-        System.out.println( "null" );
         return null; // you should never hit this
     }
 
     public static Color buildColorEnum(String selection) {
         String selectedColor = selection.toLowerCase();
 
-        if(selectedColor.equals("red")) {
-            return Color.RED;
-        } else if(selectedColor.equals("green")) {
-            return Color.GREEN;
-        } else if(selectedColor.equals("blue")) {
-            return Color.BLUE;
-        } else if(selectedColor.equals("yellow")) {
-            return Color.YELLOW;
+        switch (selectedColor) {
+            case "red":
+                return Color.RED;
+            case "green":
+                return Color.GREEN;
+            case "blue":
+                return Color.BLUE;
+            case "yellow":
+                return Color.YELLOW;
         }
         return null; //you should never hit this
     }
 	
 	public static void main(String[] args) {
-		
 		launch(args);
-		
 	}
 }

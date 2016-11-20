@@ -226,9 +226,9 @@ public class Main extends Application {
                     for(int i = 0; i < N; i++) {
                         guessInputFields.add( new ComboBox<String>(combinationComboBoxDisplay) );
                         GridPane.setConstraints(guessInputFields.get(i), i, 1 );
+                        GridPane.setValignment( guessInputFields.get(i), VPos.CENTER );
                         controlBox.getChildren().add( guessInputFields.get(i) );
                         guessInputFields.get(i).setVisible(true);
-                        GridPane.setValignment( guessInputFields.get(i), VPos.CENTER );
                     }
 				}
 			});

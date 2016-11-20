@@ -129,12 +129,7 @@ public class Main extends Application {
 			GridPane.setConstraints( shapeList, 0, 1 , 1, 2);
 			GridPane.setConstraints( colorList, 2, 1 , 1, 2);
 			
-			for ( int i = 0; i < guessInputFields.size(); i++ ){
-				controlBox.getChildren().add( guessInputFields.get( i ) );
-				GridPane.setConstraints( guessInputFields.get( i ), i, 0);
-				guessInputFields.get( i ).setVisible( false );
-			}
-			
+						
 			//setHalignment and setValignments for controls in the buttonBox GridPane
 			GridPane.setHalignment( closeButton, HPos.CENTER );
 			GridPane.setHalignment( submitButton, HPos.CENTER );
@@ -163,6 +158,7 @@ public class Main extends Application {
             // Set up the scene, style it
             Scene scene = new Scene( root, 1200, 570 );
 			scene.getStylesheets().add( getClass().getResource("application.css").toExternalForm() );
+			primaryStage.setTitle("The Shape is Right!");
 			
 			//EventHandler for shapeList ListView to get shape choices from user.
 			shapeList.getSelectionModel().getSelectedItems().addListener(
@@ -226,7 +222,7 @@ public class Main extends Application {
                     for(int i = 0; i < N; i++) {
                         guessInputFields.add( new ComboBox<String>(combinationComboBoxDisplay) );
                         GridPane.setConstraints(guessInputFields.get(i), i, 1 );
-                        GridPane.setValignment( guessInputFields.get(i), VPos.CENTER );
+                        GridPane.setHalignment( guessInputFields.get(i), HPos.CENTER );
                         controlBox.getChildren().add( guessInputFields.get(i) );
                         guessInputFields.get(i).setVisible(true);
                     }

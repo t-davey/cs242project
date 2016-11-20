@@ -84,6 +84,7 @@ public class Main extends Application {
             //guessButton
             Button guessButton = new Button();
             guessButton.setText("Guess!");
+            guessButton.setVisible(false);
             guessButton.getStyleClass().add("buttontheme");
 			
 			ArrayList<ComboBox> guessInputFields = new ArrayList<ComboBox>();
@@ -126,7 +127,8 @@ public class Main extends Application {
 			
 			//Add controls to controlBox
 			controlBox.getChildren().add( closeButton );
-			controlBox.getChildren().add( submitButton );
+            controlBox.getChildren().add( guessButton );
+            controlBox.getChildren().add( submitButton );
 			controlBox.getChildren().add( selectN );
 			controlBox.getChildren().add( shapeList );
 			controlBox.getChildren().add( colorList );
@@ -134,7 +136,8 @@ public class Main extends Application {
 			
 			//Assigning nodes to grid positions
 			GridPane.setConstraints( closeButton, 1, 3 );
-			GridPane.setConstraints( submitButton, 1, 2 );
+            GridPane.setConstraints( guessButton, 3, 2 );
+            GridPane.setConstraints( submitButton, 1, 2 );
 			GridPane.setConstraints( selectN, 1, 0 );
 			GridPane.setConstraints( shapeList, 0, 1 , 1, 2);
 			GridPane.setConstraints( colorList, 2, 1 , 1, 2);
@@ -147,7 +150,8 @@ public class Main extends Application {
 			
 			//setHalignment and setValignments for controls in the buttonBox GridPane
 			GridPane.setHalignment( closeButton, HPos.CENTER );
-			GridPane.setHalignment( submitButton, HPos.CENTER );
+            GridPane.setHalignment( guessButton, HPos.CENTER );
+            GridPane.setHalignment( submitButton, HPos.CENTER );
 			GridPane.setHalignment(selectN, HPos.CENTER);
 			GridPane.setValignment( shapeList, VPos.CENTER );
 			GridPane.setValignment(colorList, VPos.CENTER);
@@ -215,6 +219,7 @@ public class Main extends Application {
 					colorList.setVisible( false );
 					selectN.setVisible( false );
 					submitButton.setVisible( false );
+                    guessButton.setVisible(true);
 
 					shapeRand = new Random();
 					colorRand = new Random();

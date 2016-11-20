@@ -11,6 +11,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.HPos;
 import javafx.geometry.VPos;
@@ -21,6 +22,7 @@ import javafx.stage.Stage;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.layout.ColumnConstraints;
@@ -34,22 +36,23 @@ import javafx.util.Duration;
 
 public class Main extends Application {
 	
-	public int N;
-	public int minN = 3;
-	public int maxN = 7;
-    public static final int MAX_TRIALS = 3;
-    public int trial = 0;
-	public int score;
+	public int N; //number of shapes
+	public int minN = 3; //minimum number of shapes
+	public int maxN = 7; //maximum number of shapes
+    public static final int MAX_TRIALS = 3; //maximum number of trials
+    public int trial = 1; //current trial number
+	public int score; //current score
 	public ObservableList<String> shapeInput;
 	public ObservableList<String> colorInput;
 	public Random shapeRand;
 	public Random colorRand;
+	ArrayList<String> combinationDisplayKey = new ArrayList<String>();
 	
 	@Override
 	public void start(Stage primaryStage) {
 		try {
 			GridPane root = new GridPane();
-			root.setGridLinesVisible( true );
+			root.setGridLinesVisible( false );
 			root.getStyleClass().add("graytheme");
 			root.getRowConstraints().add( new RowConstraints(300) ); //split main GridPane in half
 			root.getRowConstraints().add( new RowConstraints(300) );
@@ -58,7 +61,7 @@ public class Main extends Application {
 			 * Primary control pane where all user interaction will take place
 			 */
 			GridPane controlBox = new GridPane();
-			controlBox.setGridLinesVisible( true ); //visible grid lines before final version
+			controlBox.setGridLinesVisible( false ); //visible grid lines before final version
 			controlBox.getStyleClass().add("gridtheme");
 			controlBox.setMinSize(1200.0, 275.0);
 			controlBox.setMaxSize(1200.0, 275.0);
@@ -86,6 +89,14 @@ public class Main extends Application {
             guessButton.setText("Guess!");
             guessButton.setVisible(false);
             guessButton.getStyleClass().add("buttontheme");
+            
+            Button restartButton = new Button();
+            restartButton.setText("Restart");
+            restartButton.setVisible(false);
+            restartButton.getStyleClass().add("buttontheme");
+            
+            //scoreLabel
+            Label scoreLabel = new Label("Score: " + score + "/" + 3*N);
 			
 			ArrayList<ComboBox> guessInputFields = new ArrayList<ComboBox>();
 			ArrayList<Shape> shapeDisplay = new ArrayList<Shape>();
@@ -132,7 +143,8 @@ public class Main extends Application {
 			controlBox.getChildren().add( selectN );
 			controlBox.getChildren().add( shapeList );
 			controlBox.getChildren().add( colorList );
-			//controlBox.getChildren().addAll( guessInputFields );
+			controlBox.getChildren().add( scoreLabel );
+			controlBox.getChildren().add( restartButton );
 			
 			//Assigning nodes to grid positions
 			GridPane.setConstraints( closeButton, 1, 3 );
@@ -162,7 +174,7 @@ public class Main extends Application {
                 GridPane to show shapes after hitting the submitButton and guessing.
             */
             GridPane displayBox = new GridPane();
-            displayBox.setGridLinesVisible(true); //visible grid lines before final version
+            displayBox.setGridLinesVisible(false); //visible grid lines before final version
             displayBox.getStyleClass().add("gridtheme");
             displayBox.setMinSize(1200.0, 275.0);
             displayBox.setMaxSize(1200.0, 275.0);
@@ -212,7 +224,7 @@ public class Main extends Application {
 			submitButton.setOnAction( new EventHandler<ActionEvent>() {
 				@Override
 				public void handle(ActionEvent arg0) {
-                    ArrayList<String> combinationDisplay = new ArrayList<String>();
+					ArrayList<String> combinationDisplay = new ArrayList<String>();
                     ObservableList<String> combinationComboBoxDisplay;
 
 					shapeList.setVisible( false );
@@ -220,10 +232,13 @@ public class Main extends Application {
 					selectN.setVisible( false );
 					submitButton.setVisible( false );
                     guessButton.setVisible(true);
+                    restartButton.setVisible(true);
 
 					shapeRand = new Random();
 					colorRand = new Random();
 
+					scoreLabel.setText("Score: " + score + "/" + 3*N);
+					
                     for(int i = 0; i < N - 3; i++) {
                         controlBox.getColumnConstraints().add( new ColumnConstraints(150) );
                         displayBox.getColumnConstraints().add( new ColumnConstraints(150) );
@@ -246,19 +261,25 @@ public class Main extends Application {
                     }
 
                     GridPane.setConstraints(closeButton, 3, 3);
+                    GridPane.setConstraints(restartButton, 2, 3);
 
+                    //Creates an ArrayList to store a copy of the original shape ordering.
+                    combinationDisplayKey.addAll( combinationDisplay );
+                                  
                     // initialize list of options
                     Collections.shuffle(combinationDisplay, new Random());
                     combinationComboBoxDisplay = FXCollections.observableArrayList(combinationDisplay);
-
-                    // add dropdowns to gui
+                    
+                    // add ComboBoxes to GUI
                     for(int i = 0; i < N; i++) {
                         guessInputFields.add( new ComboBox<String>(combinationComboBoxDisplay) );
                         GridPane.setConstraints(guessInputFields.get(i), i, 1 );
-                        GridPane.setHalignment(guessInputFields.get(i), HPos.CENTER);
+                        GridPane.setHalignment(guessInputFields.get(i), HPos.CENTER);                  
                         controlBox.getChildren().add( guessInputFields.get(i) );
                         guessInputFields.get(i).setVisible(true);
                     }
+                    
+                    
 				}
 			});
 
@@ -269,32 +290,81 @@ public class Main extends Application {
 					N = selectN.getValue();
 				}
 			});
+			
 
             //EventHandler for guessButton Button to process user input for guesses.
             guessButton.setOnAction( new EventHandler<ActionEvent>() {
                 @Override
                 public void handle( ActionEvent event ) {
                     try {
-                        FadeTransition fadeOut = new FadeTransition();
-                        fadeOut.setDuration(new Duration(2000));
-                        fadeOut.setNode(null); // Change this
-                        fadeOut.setFromValue(1.0);
-                        fadeOut.setToValue(0.0);
-
-                        FadeTransition fadeIn = new FadeTransition();
-                        fadeIn.setDuration(new Duration(2000));
-                        fadeIn.setNode(null); //change this
-                        fadeIn.setFromValue(1.0);
-                        fadeIn.setToValue(0.0);
-
-                        fadeOut.play();
-                        fadeIn.play();
+                    	      
+                    	String answer;
+                    	String guess;
+                    	ArrayList<Integer> correctGuesses = new ArrayList<Integer>();
+                    	
+                    	trial++;
+                    	
+                    	//incomplete implementation
+                    	if (trial > MAX_TRIALS) {
+                    		guessButton.setDisable(true);
+                    		scoreLabel.setText("Game over.\nFinal Score: " + score + "/" + 3*N);
+                    		
+                    	}
+                    	
+                    	
+                    	for (int i = 0; i < N; i++) {
+                    		answer = combinationDisplayKey.get(i);
+                    		guess = (String) guessInputFields.get(i).getValue();
+                    		
+                    		if (answer.equals(guess)){
+                    			
+                    			score++;
+                                scoreLabel.setText("Score: " + score + "/" + 3*N);
+                                correctGuesses.add(i);
+                                                            
+                    		}
+                    	}
+                    	
+                    	
+                    	for (int i = 0; i < correctGuesses.size(); i++) {
+                    		int guessNum = correctGuesses.get(i);
+                    		int newCol = GridPane.getColumnIndex(displayBox.getChildren().get(guessNum));
+                    		int newRow = GridPane.getRowIndex(displayBox.getChildren().get(guessNum));
+                    		
+                			FadeTransition fadeOut = new FadeTransition();
+                            fadeOut.setDuration(new Duration(1000));
+                            fadeOut.setNode(displayBox.getChildren().get(guessNum));
+                            fadeOut.setFromValue(1.0);
+                            fadeOut.setToValue(0.0);
+                            fadeOut.play();
+                    		
+                    		Shape correctShape = shapeDisplay.get(guessNum);
+                    		
+                    		try {
+                    			displayBox.getChildren().add(correctShape);
+                    		} catch (Exception e){
+                    			// e.printStackTrace(System.err);
+                    		}
+                    		
+                    		System.out.println(newCol + ", " + newRow);
+                    		GridPane.setConstraints(correctShape, newCol, newRow);
+                    		FadeTransition fadeIn = new FadeTransition();
+                            fadeIn.setDuration(new Duration(1000));
+                            fadeIn.setNode(correctShape);
+                            fadeIn.setFromValue(0.0);
+                            fadeIn.setToValue(1.0);
+                            fadeIn.play();
+                    	}
+                    	
                     } catch ( Exception e ) {
                         e.printStackTrace(System.err);
                     }
                 }
             });
 			
+            
+            
+            
 			//EventHandler for closeButton Button to gracefully exit program.
 			closeButton.setOnAction( new EventHandler<ActionEvent>() {
 				@Override

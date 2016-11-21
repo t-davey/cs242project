@@ -1,0 +1,18 @@
+Travis Davey and Gus Naughton
+Maximum number choice is 7.
+
+User Study:
+
+Methodology:
+
+Choices:
+	Shapes:
+		-Square
+		-Circle
+		-Rectangle
+		-Hexagon
+	Colors:
+		-Red
+		-Green
+		-Blue
+		-Yellow

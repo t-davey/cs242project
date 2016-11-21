@@ -434,9 +434,9 @@ public class Main extends Application {
 	}
 
     /**
-     * @param selection
+     * @param selection String obtained from user input.
      * @param index
-     * @return Shape object
+     * @return Shape 
      */
     public static Shape buildCardObject(String selection, int index) {
         String selectedShape = selection.toLowerCase();
@@ -459,8 +459,8 @@ public class Main extends Application {
     }
 
     /**
-     * @param selection
-     * @return Color object
+     * @param selection String obtained from user input.
+     * @return Color Property to assign to a shape.
      */
     public static Color buildColorEnum(String selection) {
         String selectedColor = selection.toLowerCase();

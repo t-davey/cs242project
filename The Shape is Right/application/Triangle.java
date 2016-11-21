@@ -17,10 +17,10 @@ public class Triangle {
     }
 
     /**
-     * @param width
-     * @param height
-     * @param x
-     * @param y
+     * @param width integer representing the shape's width
+     * @param height integer representing the shape's height
+     * @param x integer representing the shape's x coordinate
+     * @param y integer representing the shape's y coordinate
      */
     public Triangle(int width, int height, int x, int y) {
         this.triangle = new Polygon();

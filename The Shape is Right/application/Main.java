@@ -242,7 +242,6 @@ public class Main extends Application {
 					shapeRand = new Random();
 					colorRand = new Random();
                     trialLabel.setText("Trial: " + trial + "/3" );
-
 					scoreLabel.setText("Score: " + score + "/" + 3*N);
 
                     for(int i = 0; i < N - 3; i++) {
@@ -312,7 +311,7 @@ public class Main extends Application {
                         trialLabel.setText("Trial: " + trial + "/3" );
                         //incomplete implementation
                     	if (trial > MAX_TRIALS) {
-                    		guessButton.setDisable(true);
+                    		//guessButton.setDisable(true);
                             trialLabel.setVisible(false);
                     		scoreLabel.setText("Game over.\nFinal Score: " + score + "/" + 3*N);
                     		
@@ -335,8 +334,8 @@ public class Main extends Application {
                     	
                     	for (int i = 0; i < correctGuesses.size(); i++) {
                     		int guessNum = correctGuesses.get(i);
-                    		int newCol = GridPane.getColumnIndex(displayBox.getChildren().get(guessNum));
-                    		int newRow = GridPane.getRowIndex(displayBox.getChildren().get(guessNum));
+                    		int newCol = GridPane.getColumnIndex(displayBox.getChildren().get(guessNum + 1));
+                    		int newRow = GridPane.getRowIndex(displayBox.getChildren().get(1));
                     		
                 			FadeTransition fadeOut = new FadeTransition();
                             fadeOut.setDuration(new Duration(1000));

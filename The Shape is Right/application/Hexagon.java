@@ -3,8 +3,10 @@ package application;
 import javafx.scene.shape.Polyline;
 import javafx.scene.shape.Shape;
 
+
 /**
- * Created by gusnaughton on 11/16/16.
+ * @author Gus Naughton
+ *
  */
 public class Hexagon {
 
@@ -14,6 +16,12 @@ public class Hexagon {
         this.hexagon = new Polyline();
     }
 
+    /**
+     * @param width
+     * @param height
+     * @param x
+     * @param y
+     */
     public Hexagon(int width, int height, int x, int y) {
         this.hexagon = new Polyline();
 

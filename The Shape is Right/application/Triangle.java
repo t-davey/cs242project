@@ -3,8 +3,10 @@ package application;
 import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Shape;
 
+
 /**
- * Created by gusnaughton on 11/16/16.
+ * @author Gus Naughton
+ *
  */
 public class Triangle {
 
@@ -14,6 +16,12 @@ public class Triangle {
         this.triangle = new Polygon();
     }
 
+    /**
+     * @param width
+     * @param height
+     * @param x
+     * @param y
+     */
     public Triangle(int width, int height, int x, int y) {
         this.triangle = new Polygon();
 

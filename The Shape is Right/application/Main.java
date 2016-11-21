@@ -34,6 +34,10 @@ import javafx.scene.shape.Shape;
 import javafx.util.Duration;
 
 
+/**
+ * @author Travis Davey and Gus Naughton
+ *
+ */
 public class Main extends Application {
 	
 	public int N; //number of shapes
@@ -48,6 +52,7 @@ public class Main extends Application {
 	public Random colorRand;
 	ArrayList<String> combinationDisplayKey = new ArrayList<String>();
 	
+
 	@Override
 	public void start(Stage primaryStage) {
 		try {
@@ -117,9 +122,7 @@ public class Main extends Application {
 
 			/*
 			 * Creation of shapeList ListView populated with Strings representing
-			 * possible shapes. Final decision on how to implement shapes is yet to
-			 * be made. These Strings are currently simply place-holders for GUI
-			 * construction.
+			 * possible shapes. 
 			 */
 			ObservableList<String> shapeArrayList = FXCollections.observableArrayList("Circle", "Rectangle", "Triangle", "Hexagon");
 			ListView<String> shapeList = new ListView<String>();
@@ -128,9 +131,7 @@ public class Main extends Application {
 			
 			/*
 			 * Creation of colorList ListView populated with Strings representing
-			 * possible colors. Final decision on how to implement colors is yet to
-			 * be made. These Strings are currently simply place-holders for GUI
-			 * construction.
+			 * possible colors.
 			 */
 			ObservableList<String> colorArrayList = FXCollections.observableArrayList("Red", "Green", "Blue", "Yellow");
 			ListView<String> colorList = new ListView<String>();
@@ -432,6 +433,11 @@ public class Main extends Application {
 		}
 	}
 
+    /**
+     * @param selection
+     * @param index
+     * @return Shape object
+     */
     public static Shape buildCardObject(String selection, int index) {
         String selectedShape = selection.toLowerCase();
 
@@ -452,6 +458,10 @@ public class Main extends Application {
         return null; // you should never hit this
     }
 
+    /**
+     * @param selection
+     * @return Color object
+     */
     public static Color buildColorEnum(String selection) {
         String selectedColor = selection.toLowerCase();
 
@@ -468,6 +478,9 @@ public class Main extends Application {
         return null; //you should never hit this
     }
 	
+	/**
+	 * @param args
+	 */
 	public static void main(String[] args) {
 		launch(args);
 	}

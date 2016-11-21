@@ -61,7 +61,7 @@ public class Main extends Application {
 			 * Primary control pane where all user interaction will take place
 			 */
 			GridPane controlBox = new GridPane();
-			controlBox.setGridLinesVisible( false ); //visible grid lines before final version
+			controlBox.setGridLinesVisible( true ); //visible grid lines before final version
 			controlBox.getStyleClass().add("gridtheme");
 			controlBox.setMinSize(1200.0, 275.0);
 			controlBox.setMaxSize(1200.0, 275.0);
@@ -177,7 +177,7 @@ public class Main extends Application {
                 GridPane to show shapes after hitting the submitButton and guessing.
             */
             GridPane displayBox = new GridPane();
-            displayBox.setGridLinesVisible(false); //visible grid lines before final version
+            displayBox.setGridLinesVisible(true); //visible grid lines before final version
             displayBox.getStyleClass().add("gridtheme");
             displayBox.setMinSize(1200.0, 275.0);
             displayBox.setMaxSize(1200.0, 275.0);
@@ -388,6 +388,10 @@ public class Main extends Application {
                         guessInputFields.clear();
                         for(int i = 0; i < N; i++) {
                             displayBox.getChildren().clear();
+                        }
+                        for(int i = N; i > 2; i--) {
+                            controlBox.getColumnConstraints().remove( i - 1 );
+                            displayBox.getColumnConstraints().remove( i - 1 );
                         }
                     } catch ( Exception e ) {
                         e.printStackTrace(System.err);

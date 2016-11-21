@@ -97,6 +97,7 @@ public class Main extends Application {
             
             //scoreLabel
             Label scoreLabel = new Label("Score: " + score + "/" + 3*N);
+            Label trialLabel = new Label("Trial: " + score + "/3");
 			
 			ArrayList<ComboBox> guessInputFields = new ArrayList<ComboBox>();
 			ArrayList<Shape> shapeDisplay = new ArrayList<Shape>();
@@ -144,9 +145,11 @@ public class Main extends Application {
 			controlBox.getChildren().add( shapeList );
 			controlBox.getChildren().add( colorList );
 			controlBox.getChildren().add( scoreLabel );
+            controlBox.getChildren().add( trialLabel );
 			controlBox.getChildren().add( restartButton );
 			
 			//Assigning nodes to grid positions
+            GridPane.setConstraints( trialLabel, 3, 0);
 			GridPane.setConstraints( closeButton, 1, 3 );
             GridPane.setConstraints( guessButton, 3, 2 );
             GridPane.setConstraints( submitButton, 1, 2 );
@@ -233,12 +236,15 @@ public class Main extends Application {
 					submitButton.setVisible( false );
                     guessButton.setVisible(true);
                     restartButton.setVisible(true);
+                    scoreLabel.setVisible(true);
+                    trialLabel.setVisible(true);
 
 					shapeRand = new Random();
 					colorRand = new Random();
+                    trialLabel.setText("Trial: " + trial + "/3" );
 
 					scoreLabel.setText("Score: " + score + "/" + 3*N);
-					
+
                     for(int i = 0; i < N - 3; i++) {
                         controlBox.getColumnConstraints().add( new ColumnConstraints(150) );
                         displayBox.getColumnConstraints().add( new ColumnConstraints(150) );
@@ -303,10 +309,11 @@ public class Main extends Application {
                     	ArrayList<Integer> correctGuesses = new ArrayList<Integer>();
                     	
                     	trial++;
-                    	
-                    	//incomplete implementation
+                        trialLabel.setText("Trial: " + trial + "/3" );
+                        //incomplete implementation
                     	if (trial > MAX_TRIALS) {
                     		guessButton.setDisable(true);
+                            trialLabel.setVisible(false);
                     		scoreLabel.setText("Game over.\nFinal Score: " + score + "/" + 3*N);
                     		
                     	}
@@ -361,9 +368,32 @@ public class Main extends Application {
                     }
                 }
             });
-			
-            
-            
+
+
+            //EventHandler for restartButton to reset the game.
+            restartButton.setOnAction( new EventHandler<ActionEvent>() {
+                @Override
+                public void handle( ActionEvent event ) {
+                    try {
+                        shapeList.setVisible( true );
+                        colorList.setVisible( true );
+                        selectN.setVisible( true );
+                        submitButton.setVisible( true );
+                        guessButton.setVisible(false);
+                        restartButton.setVisible(false);
+                        scoreLabel.setVisible(false);
+                        trialLabel.setVisible(false);
+                        shapeDisplay.clear();
+                        combinationDisplayKey.clear();
+                        guessInputFields.clear();
+                        for(int i = 0; i < N; i++) {
+                            displayBox.getChildren().clear();
+                        }
+                    } catch ( Exception e ) {
+                        e.printStackTrace(System.err);
+                    }
+                }
+            });
             
 			//EventHandler for closeButton Button to gracefully exit program.
 			closeButton.setOnAction( new EventHandler<ActionEvent>() {

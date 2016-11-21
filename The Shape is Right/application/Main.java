@@ -227,62 +227,66 @@ public class Main extends Application {
 			submitButton.setOnAction( new EventHandler<ActionEvent>() {
 				@Override
 				public void handle(ActionEvent arg0) {
-					ArrayList<String> combinationDisplay = new ArrayList<String>();
-                    ObservableList<String> combinationComboBoxDisplay;
+                    if(shapeList.getSelectionModel().getSelectedItems().size() != 0
+                        && colorList.getSelectionModel().getSelectedItems().size() != 0 && N >= 3) {
+                        ArrayList<String> combinationDisplay = new ArrayList<String>();
+                        ObservableList<String> combinationComboBoxDisplay;
 
-					shapeList.setVisible( false );
-					colorList.setVisible( false );
-					selectN.setVisible( false );
-					submitButton.setVisible( false );
-                    guessButton.setVisible(true);
-                    restartButton.setVisible(true);
-                    scoreLabel.setVisible(true);
-                    trialLabel.setVisible(true);
+                        shapeList.setVisible( false );
+                        colorList.setVisible( false );
+                        selectN.setVisible( false );
+                        submitButton.setVisible( false );
+                        guessButton.setVisible(true);
+                        restartButton.setVisible(true);
+                        scoreLabel.setVisible(true);
+                        trialLabel.setVisible(true);
 
-					shapeRand = new Random();
-					colorRand = new Random();
-                    trialLabel.setText("Trial: " + trial + "/3" );
-					scoreLabel.setText("Score: " + score + "/" + 3*N);
+                        shapeRand = new Random();
+                        colorRand = new Random();
+                        trialLabel.setText("Trial: " + trial + "/3" );
+                        scoreLabel.setText("Score: " + score + "/" + 3*N);
 
-                    for(int i = 0; i < N - 3; i++) {
-                        controlBox.getColumnConstraints().add( new ColumnConstraints(150) );
-                        displayBox.getColumnConstraints().add( new ColumnConstraints(150) );
+                        for(int i = 0; i < N - 3; i++) {
+                            controlBox.getColumnConstraints().add( new ColumnConstraints(150) );
+                            displayBox.getColumnConstraints().add( new ColumnConstraints(150) );
+                        }
+
+                        for(int i = 0; i < N; i++) {
+                            // get a random shape, add it to array
+                            String shape = shapeInput.get(shapeRand.nextInt(shapeInput.size()));
+                            shapeDisplay.add(buildCardObject(shape, i));
+                            // fill that shape with random color
+                            String color = colorInput.get(colorRand.nextInt(colorInput.size()));
+                            shapeDisplay.get(i).setFill(buildColorEnum(color));
+                            // set a white stroke to make it more visible
+                            shapeDisplay.get(i).setStroke(Color.WHITE);
+                            GridPane.setConstraints(shapeDisplay.get(i), i, 0);
+                            displayBox.getChildren().add(shapeMasks.get(i));
+                            //displayBox.getChildren().add(shapeDisplay.get(i));
+                            // add the combination to a list of all combinations
+                            combinationDisplay.add(color + " " + shape);
+                        }
+
+                        GridPane.setConstraints(closeButton, 3, 3);
+                        GridPane.setConstraints(restartButton, 2, 3);
+
+                        //Creates an ArrayList to store a copy of the original shape ordering.
+                        combinationDisplayKey.addAll( combinationDisplay );
+
+                        // initialize list of options
+                        Collections.shuffle(combinationDisplay, new Random());
+                        combinationComboBoxDisplay = FXCollections.observableArrayList(combinationDisplay);
+
+                        // add ComboBoxes to GUI
+                        for(int i = 0; i < N; i++) {
+                            guessInputFields.add( new ComboBox<String>(combinationComboBoxDisplay) );
+                            GridPane.setConstraints(guessInputFields.get(i), i, 1 );
+                            GridPane.setHalignment(guessInputFields.get(i), HPos.CENTER);
+                            controlBox.getChildren().add( guessInputFields.get(i) );
+                            guessInputFields.get(i).setVisible(true);
+                        }
                     }
 
-                    for(int i = 0; i < N; i++) {
-                        // get a random shape, add it to array
-                    	String shape = shapeInput.get(shapeRand.nextInt(shapeInput.size()));
-                        shapeDisplay.add(buildCardObject(shape, i));
-                        // fill that shape with random color
-                        String color = colorInput.get(colorRand.nextInt(colorInput.size()));
-                        shapeDisplay.get(i).setFill(buildColorEnum(color));
-                        // set a white stroke to make it more visible
-                        shapeDisplay.get(i).setStroke(Color.WHITE);
-                        GridPane.setConstraints(shapeDisplay.get(i), i, 0);
-                        displayBox.getChildren().add(shapeMasks.get(i));
-                        //displayBox.getChildren().add(shapeDisplay.get(i));
-                        // add the combination to a list of all combinations
-                        combinationDisplay.add(color + " " + shape);
-                    }
-
-                    GridPane.setConstraints(closeButton, 3, 3);
-                    GridPane.setConstraints(restartButton, 2, 3);
-
-                    //Creates an ArrayList to store a copy of the original shape ordering.
-                    combinationDisplayKey.addAll( combinationDisplay );
-                                  
-                    // initialize list of options
-                    Collections.shuffle(combinationDisplay, new Random());
-                    combinationComboBoxDisplay = FXCollections.observableArrayList(combinationDisplay);
-
-                    // add ComboBoxes to GUI
-                    for(int i = 0; i < N; i++) {
-                        guessInputFields.add( new ComboBox<String>(combinationComboBoxDisplay) );
-                        GridPane.setConstraints(guessInputFields.get(i), i, 1 );
-                        GridPane.setHalignment(guessInputFields.get(i), HPos.CENTER);                  
-                        controlBox.getChildren().add( guessInputFields.get(i) );
-                        guessInputFields.get(i).setVisible(true);
-                    }
                     
                     
 				}

@@ -98,7 +98,7 @@ public class Main extends Application {
             //scoreLabel
             Label scoreLabel = new Label("Score: " + score + "/" + 3*N);
             Label trialLabel = new Label("Trial: " + score + "/3");
-			
+
 			ArrayList<ComboBox> guessInputFields = new ArrayList<ComboBox>();
 			ArrayList<Shape> shapeDisplay = new ArrayList<Shape>();
 			
@@ -156,7 +156,7 @@ public class Main extends Application {
 			GridPane.setConstraints( selectN, 1, 0 );
 			GridPane.setConstraints( shapeList, 0, 1 , 1, 2);
 			GridPane.setConstraints( colorList, 2, 1 , 1, 2);
-			
+
 			for ( int i = 0; i < guessInputFields.size(); i++ ){
 				controlBox.getChildren().add( guessInputFields.get( i ) );
 				GridPane.setConstraints( guessInputFields.get( i ), i, 0);
@@ -274,7 +274,7 @@ public class Main extends Application {
                     // initialize list of options
                     Collections.shuffle(combinationDisplay, new Random());
                     combinationComboBoxDisplay = FXCollections.observableArrayList(combinationDisplay);
-                    
+
                     // add ComboBoxes to GUI
                     for(int i = 0; i < N; i++) {
                         guessInputFields.add( new ComboBox<String>(combinationComboBoxDisplay) );
@@ -311,10 +311,9 @@ public class Main extends Application {
                         trialLabel.setText("Trial: " + trial + "/3" );
                         //incomplete implementation
                     	if (trial >= MAX_TRIALS) {
-                    		guessButton.setDisable(true);
+                    		guessButton.setVisible(false);
                             trialLabel.setVisible(false);
                     		scoreLabel.setText("Game over.\nFinal Score: " + score + "/" + 3*N);
-                    		
                     	} 
                     	
                     	for (int i = 0; i < N; i++) {
@@ -359,12 +358,12 @@ public class Main extends Application {
                             fadeIn.setToValue(1.0);
                             fadeIn.play();
                     	}
-                    	
+
                     	if (correctGuesses.size() == N) {
-                    		guessButton.setDisable(true);
+                    		guessButton.setVisible(false);
                     		trialLabel.setVisible(false);
                     		scoreLabel.setText("Game over.\nFinal Score: " + score + "/" + 3*N);
-                    		
+
                     	}
                     	
                     } catch ( Exception e ) {
@@ -394,9 +393,10 @@ public class Main extends Application {
                         for(int i = 0; i < N; i++) {
                             displayBox.getChildren().clear();
                             controlBox.getChildren().removeAll(guessInputFields);
+                            shapeMasks.get(i).setOpacity(1.0);
                         }
                         guessInputFields.clear();
-
+                        displayBox.getChildren().clear();
                         for(int i = N; i > 3; i--) {
                             controlBox.getColumnConstraints().remove( i - 1 );
                             displayBox.getColumnConstraints().remove( i - 1 );

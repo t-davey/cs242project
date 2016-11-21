@@ -1,0 +1,44 @@
+Travis Davey and Gus Naughton
+Maximum number choice is 7.
+
+User Study:
+The user study was conducted by asking two friends, Jordan and Jon, to play the game after explaining
+how the game works. 
+
+Jordan reported that he encountered no difficulty in completing the game in terms of coding bugs.
+He did mention that the game was not enjoyable but it works nonetheless.
+
+Jon similarly reported encountering no game-breaking bugs.
+He was, however, annoyed that the animations allowed the question marks to re-appear and fade
+after every click of the 'Guess!' button.
+
+Methodology:
+The game begins by selecting a number (3, 5, 7) from a dropdown menu,
+one to four different shapes from a list, and one to four different colors from a list.
+The user then clicks the 'Submit' button to begin the game.
+
+The user is presented with a series of question marks, one for each shape they will be guessing.
+Under each question mark the user will select their guess for what shape is hidden above 
+from a dropdown menu. After all guesses have been placed the user will click the 'Guess!' button.
+
+For each correct guess the user will receive one point. The user can guess three times before
+the game will end. The maximum score the user can receive is three times the number of shapes.
+This is achieved by correctly guessing each shape on the first round, and submitting their guesses 
+twice more to complete all three trials.
+
+After all three trials are complete the 'Guess!' button will be disabled, the user will be presented
+with their final score. They can then either close the game with the 'Close' button, or restart with
+the 'Restart' button.
+
+
+Choices:
+	Shapes:
+		-Square
+		-Circle
+		-Rectangle
+		-Hexagon
+	Colors:
+		-Red
+		-Green
+		-Blue
+		-Yellow

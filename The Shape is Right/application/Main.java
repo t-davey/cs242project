@@ -384,13 +384,14 @@ public class Main extends Application {
                         trialLabel.setVisible(false);
                         shapeDisplay.clear();
                         combinationDisplayKey.clear();
-                                                
- 
+
                         for(int i = 0; i < N; i++) {
                             displayBox.getChildren().clear();
                             controlBox.getChildren().removeAll(guessInputFields);
                         }
-                        for(int i = N; i > 2; i--) {
+                        guessInputFields.clear();
+
+                        for(int i = N; i > 3; i--) {
                             controlBox.getColumnConstraints().remove( i - 1 );
                             displayBox.getColumnConstraints().remove( i - 1 );
                         }

@@ -2,6 +2,15 @@ Travis Davey and Gus Naughton
 Maximum number choice is 7.
 
 User Study:
+The user study was conducted by asking two friends, Jordan and Jon, to play the game after explaining
+how the game works. 
+
+Jordan reported that he encountered no difficulty in completing the game in terms of coding bugs.
+He did mention that the game was not enjoyable but it works nonetheless.
+
+Jon similarly reported encountering no game-breaking bugs.
+He was, however, annoyed that the animations allowed the question marks to re-appear and fade
+after every click of the 'Guess!' button.
 
 Methodology:
 The game begins by selecting a number (3, 5, 7) from a dropdown menu,
@@ -20,6 +29,7 @@ twice more to complete all three trials.
 After all three trials are complete the 'Guess!' button will be disabled, the user will be presented
 with their final score. They can then either close the game with the 'Close' button, or restart with
 the 'Restart' button.
+
 
 Choices:
 	Shapes:

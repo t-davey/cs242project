@@ -336,10 +336,10 @@ public class Main extends Application {
                     		int guessNum = correctGuesses.get(i);
                     		int newCol = GridPane.getColumnIndex(displayBox.getChildren().get(guessNum + 1));
                     		int newRow = GridPane.getRowIndex(displayBox.getChildren().get(1));
-                    		
+                    		System.out.println(guessNum);
                 			FadeTransition fadeOut = new FadeTransition();
                             fadeOut.setDuration(new Duration(1000));
-                            fadeOut.setNode(displayBox.getChildren().get(guessNum));
+                            fadeOut.setNode(displayBox.getChildren().get(guessNum + 1));
                             fadeOut.setFromValue(1.0);
                             fadeOut.setToValue(0.0);
                             fadeOut.play();
